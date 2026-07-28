@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "news-topic-classifier"
+version = "0.1.0"
+description = "Interpretable TF-IDF + logistic-regression topic classifier for 20 Newsgroups, with a Streamlit demo"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "scikit-learn>=1.4",
+    "numpy>=1.26",
+    "pandas>=2.0",
+    "joblib>=1.3",
+    "matplotlib>=3.8",
+    "streamlit>=1.30",
+    "altair>=5.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "."]

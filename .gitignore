@@ -1,0 +1,30 @@
+# The 20 Newsgroups cache is downloaded on demand (~15 MB), never committed.
+data/raw/*
+!data/raw/.gitkeep
+
+# Trained artifacts are build output: `python -m news_classifier.train`
+# regenerates model.joblib. Committing binaries makes diffs useless.
+models/*.joblib
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# Tooling
+.pytest_cache/
+.ipynb_checkpoints/
+.coverage
+htmlcov/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
