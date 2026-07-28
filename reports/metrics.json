@@ -1,0 +1,221 @@
+{
+  "trained_at": "2026-07-28T05:50:43+00:00",
+  "dataset": {
+    "train_docs": 11314,
+    "test_docs": 7532,
+    "n_classes": 20,
+    "split": "official 20 Newsgroups by-date train/test",
+    "removed_parts": [
+      "headers",
+      "footers",
+      "quotes"
+    ]
+  },
+  "best_C": 10.0,
+  "holdout_metrics": {
+    "accuracy": 0.6950345193839618,
+    "macro_f1": 0.6851339422688899,
+    "weighted_f1": 0.6950135524817366,
+    "per_class": {
+      "alt.atheism": {
+        "precision": 0.5066225165562914,
+        "recall": 0.47962382445141066,
+        "f1-score": 0.4927536231884058,
+        "support": 319.0
+      },
+      "comp.graphics": {
+        "precision": 0.6503496503496503,
+        "recall": 0.7172236503856041,
+        "f1-score": 0.6821515892420538,
+        "support": 389.0
+      },
+      "comp.os.ms-windows.misc": {
+        "precision": 0.638961038961039,
+        "recall": 0.6243654822335025,
+        "f1-score": 0.631578947368421,
+        "support": 394.0
+      },
+      "comp.sys.ibm.pc.hardware": {
+        "precision": 0.6701030927835051,
+        "recall": 0.6632653061224489,
+        "f1-score": 0.6666666666666666,
+        "support": 392.0
+      },
+      "comp.sys.mac.hardware": {
+        "precision": 0.736986301369863,
+        "recall": 0.6987012987012987,
+        "f1-score": 0.7173333333333334,
+        "support": 385.0
+      },
+      "comp.windows.x": {
+        "precision": 0.8393939393939394,
+        "recall": 0.7012658227848101,
+        "f1-score": 0.7641379310344828,
+        "support": 395.0
+      },
+      "misc.forsale": {
+        "precision": 0.7549019607843137,
+        "recall": 0.7897435897435897,
+        "f1-score": 0.7719298245614035,
+        "support": 390.0
+      },
+      "rec.autos": {
+        "precision": 0.4873417721518987,
+        "recall": 0.7777777777777778,
+        "f1-score": 0.5992217898832685,
+        "support": 396.0
+      },
+      "rec.motorcycles": {
+        "precision": 0.7682291666666666,
+        "recall": 0.7412060301507538,
+        "f1-score": 0.7544757033248082,
+        "support": 398.0
+      },
+      "rec.sport.baseball": {
+        "precision": 0.8136020151133502,
+        "recall": 0.8136020151133502,
+        "f1-score": 0.8136020151133502,
+        "support": 397.0
+      },
+      "rec.sport.hockey": {
+        "precision": 0.8961038961038961,
+        "recall": 0.8646616541353384,
+        "f1-score": 0.8801020408163265,
+        "support": 399.0
+      },
+      "sci.crypt": {
+        "precision": 0.85,
+        "recall": 0.6868686868686869,
+        "f1-score": 0.7597765363128491,
+        "support": 396.0
+      },
+      "sci.electronics": {
+        "precision": 0.6217616580310881,
+        "recall": 0.6106870229007634,
+        "f1-score": 0.6161745827984596,
+        "support": 393.0
+      },
+      "sci.med": {
+        "precision": 0.7715736040609137,
+        "recall": 0.7676767676767676,
+        "f1-score": 0.769620253164557,
+        "support": 396.0
+      },
+      "sci.space": {
+        "precision": 0.7380352644836272,
+        "recall": 0.7436548223350253,
+        "f1-score": 0.7408343868520859,
+        "support": 394.0
+      },
+      "soc.religion.christian": {
+        "precision": 0.6826086956521739,
+        "recall": 0.7889447236180904,
+        "f1-score": 0.7319347319347319,
+        "support": 398.0
+      },
+      "talk.politics.guns": {
+        "precision": 0.5921375921375921,
+        "recall": 0.6620879120879121,
+        "f1-score": 0.6251621271076524,
+        "support": 364.0
+      },
+      "talk.politics.mideast": {
+        "precision": 0.8486646884272997,
+        "recall": 0.7606382978723404,
+        "f1-score": 0.8022440392706872,
+        "support": 376.0
+      },
+      "talk.politics.misc": {
+        "precision": 0.5551181102362205,
+        "recall": 0.45483870967741935,
+        "f1-score": 0.5,
+        "support": 310.0
+      },
+      "talk.religion.misc": {
+        "precision": 0.47093023255813954,
+        "recall": 0.32270916334661354,
+        "f1-score": 0.3829787234042553,
+        "support": 251.0
+      },
+      "accuracy": 0.6950345193839618,
+      "macro avg": {
+        "precision": 0.6946712597910734,
+        "recall": 0.6834771278991753,
+        "f1-score": 0.6851339422688899,
+        "support": 7532.0
+      },
+      "weighted avg": {
+        "precision": 0.7025910120494694,
+        "recall": 0.6950345193839618,
+        "f1-score": 0.6950135524817366,
+        "support": 7532.0
+      }
+    }
+  },
+  "top_confusions": [
+    {
+      "true": "talk.politics.misc",
+      "predicted": "talk.politics.guns",
+      "count": 88,
+      "same_supercategory": true
+    },
+    {
+      "true": "talk.religion.misc",
+      "predicted": "soc.religion.christian",
+      "count": 58,
+      "same_supercategory": true
+    },
+    {
+      "true": "alt.atheism",
+      "predicted": "soc.religion.christian",
+      "count": 49,
+      "same_supercategory": true
+    },
+    {
+      "true": "comp.windows.x",
+      "predicted": "comp.graphics",
+      "count": 48,
+      "same_supercategory": true
+    },
+    {
+      "true": "rec.motorcycles",
+      "predicted": "rec.autos",
+      "count": 41,
+      "same_supercategory": true
+    },
+    {
+      "true": "comp.os.ms-windows.misc",
+      "predicted": "comp.sys.ibm.pc.hardware",
+      "count": 37,
+      "same_supercategory": true
+    },
+    {
+      "true": "talk.religion.misc",
+      "predicted": "alt.atheism",
+      "count": 37,
+      "same_supercategory": true
+    },
+    {
+      "true": "comp.sys.ibm.pc.hardware",
+      "predicted": "comp.os.ms-windows.misc",
+      "count": 36,
+      "same_supercategory": true
+    },
+    {
+      "true": "comp.windows.x",
+      "predicted": "comp.os.ms-windows.misc",
+      "count": 33,
+      "same_supercategory": true
+    },
+    {
+      "true": "alt.atheism",
+      "predicted": "talk.religion.misc",
+      "count": 30,
+      "same_supercategory": true
+    }
+  ],
+  "environment": {
+    "sklearn": "1.7.2",
+    "python": "3.13.1"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "content_only": {
+    "accuracy": 0.6942379182156134,
+    "macro_f1": 0.678833730120424
+  },
+  "with_metadata": {
+    "accuracy": 0.8382899628252788,
+    "macro_f1": 0.831571089715067
+  },
+  "inflation": {
+    "accuracy_points": 0.1441,
+    "macro_f1_points": 0.1527,
+    "note": "Leaving the headers, footers and quoted text in inflates the score by this much. Those parts often name the newsgroup outright, so the model learns to read metadata instead of understanding the message. The shipped model is trained on message content only."
+  }
+}

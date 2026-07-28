@@ -1,0 +1,1242 @@
+{
+  "alt.atheism": [
+    {
+      "token": "religion",
+      "weight": 6.446722523317303
+    },
+    {
+      "token": "atheism",
+      "weight": 6.252325153999924
+    },
+    {
+      "token": "atheists",
+      "weight": 5.372970825938563
+    },
+    {
+      "token": "bible",
+      "weight": 5.061523122081142
+    },
+    {
+      "token": "islamic",
+      "weight": 4.887132229391694
+    },
+    {
+      "token": "motto",
+      "weight": 4.849475284971943
+    },
+    {
+      "token": "islam",
+      "weight": 4.807924950477595
+    },
+    {
+      "token": "bobby",
+      "weight": 4.720354033941365
+    },
+    {
+      "token": "deletion",
+      "weight": 4.645559939976925
+    },
+    {
+      "token": "god",
+      "weight": 4.633372092411938
+    },
+    {
+      "token": "atheist",
+      "weight": 4.41050326169192
+    },
+    {
+      "token": "cruel",
+      "weight": 4.056406872681842
+    },
+    {
+      "token": "right thanks",
+      "weight": 3.985325588498829
+    },
+    {
+      "token": "objective",
+      "weight": 3.940747232882265
+    },
+    {
+      "token": "loans",
+      "weight": 3.909250368024617
+    }
+  ],
+  "comp.graphics": [
+    {
+      "token": "graphics",
+      "weight": 10.485364374321414
+    },
+    {
+      "token": "image",
+      "weight": 7.511301442729393
+    },
+    {
+      "token": "3d",
+      "weight": 6.837790352775024
+    },
+    {
+      "token": "images",
+      "weight": 5.954183454334079
+    },
+    {
+      "token": "68070",
+      "weight": 5.151255525969595
+    },
+    {
+      "token": "pov",
+      "weight": 4.843755497301044
+    },
+    {
+      "token": "files",
+      "weight": 4.772116779292146
+    },
+    {
+      "token": "animation",
+      "weight": 4.54582266237599
+    },
+    {
+      "token": "tiff",
+      "weight": 4.396543734555812
+    },
+    {
+      "token": "format",
+      "weight": 4.346727517475058
+    },
+    {
+      "token": "3do",
+      "weight": 4.233428212134605
+    },
+    {
+      "token": "algorithm",
+      "weight": 4.219319929463737
+    },
+    {
+      "token": "computer",
+      "weight": 4.034273123343485
+    },
+    {
+      "token": "polygon",
+      "weight": 3.9699622016593534
+    },
+    {
+      "token": "sphere",
+      "weight": 3.879788452363905
+    }
+  ],
+  "comp.os.ms-windows.misc": [
+    {
+      "token": "windows",
+      "weight": 15.008612588905276
+    },
+    {
+      "token": "file",
+      "weight": 5.996888657646204
+    },
+    {
+      "token": "cica",
+      "weight": 5.317857493956582
+    },
+    {
+      "token": "microsoft",
+      "weight": 4.255752273416309
+    },
+    {
+      "token": "problem",
+      "weight": 4.140041687005124
+    },
+    {
+      "token": "win",
+      "weight": 3.9983359310125284
+    },
+    {
+      "token": "driver",
+      "weight": 3.979661756122594
+    },
+    {
+      "token": "nt",
+      "weight": 3.917041599031356
+    },
+    {
+      "token": "norton",
+      "weight": 3.8881959688415924
+    },
+    {
+      "token": "win3",
+      "weight": 3.8171201162903348
+    },
+    {
+      "token": "drivers",
+      "weight": 3.7739483787646084
+    },
+    {
+      "token": "ms",
+      "weight": 3.6545121704347077
+    },
+    {
+      "token": "diamond",
+      "weight": 3.6116683123274176
+    },
+    {
+      "token": "mail",
+      "weight": 3.58982557918923
+    },
+    {
+      "token": "fonts",
+      "weight": 3.585713154546671
+    }
+  ],
+  "comp.sys.ibm.pc.hardware": [
+    {
+      "token": "pc",
+      "weight": 6.041339735748212
+    },
+    {
+      "token": "card",
+      "weight": 5.459153756548607
+    },
+    {
+      "token": "monitor",
+      "weight": 4.981598655913352
+    },
+    {
+      "token": "ide",
+      "weight": 4.888727220145005
+    },
+    {
+      "token": "controller",
+      "weight": 4.809046100382543
+    },
+    {
+      "token": "bios",
+      "weight": 4.730081205793121
+    },
+    {
+      "token": "scsi",
+      "weight": 4.599635059615191
+    },
+    {
+      "token": "vlb",
+      "weight": 4.5478063313998645
+    },
+    {
+      "token": "486",
+      "weight": 4.45826017938441
+    },
+    {
+      "token": "drive",
+      "weight": 4.359757373916142
+    },
+    {
+      "token": "bus",
+      "weight": 4.326715809650515
+    },
+    {
+      "token": "gateway",
+      "weight": 4.27227800967456
+    },
+    {
+      "token": "port",
+      "weight": 4.237969858746371
+    },
+    {
+      "token": "disk",
+      "weight": 4.099904687187879
+    },
+    {
+      "token": "motherboard",
+      "weight": 4.060994596872452
+    }
+  ],
+  "comp.sys.mac.hardware": [
+    {
+      "token": "mac",
+      "weight": 11.76235462341605
+    },
+    {
+      "token": "apple",
+      "weight": 10.166596858057506
+    },
+    {
+      "token": "se",
+      "weight": 6.0811314996635275
+    },
+    {
+      "token": "powerbook",
+      "weight": 5.791679225735736
+    },
+    {
+      "token": "quadra",
+      "weight": 5.648693352566134
+    },
+    {
+      "token": "centris",
+      "weight": 5.126752965164345
+    },
+    {
+      "token": "lc",
+      "weight": 5.059498033921768
+    },
+    {
+      "token": "drive",
+      "weight": 5.057390747778843
+    },
+    {
+      "token": "duo",
+      "weight": 4.770010111163696
+    },
+    {
+      "token": "simms",
+      "weight": 4.699873995007051
+    },
+    {
+      "token": "adb",
+      "weight": 4.5719592557891415
+    },
+    {
+      "token": "scsi",
+      "weight": 4.5394646761581345
+    },
+    {
+      "token": "nubus",
+      "weight": 4.318414696013421
+    },
+    {
+      "token": "problem",
+      "weight": 4.1533909319633935
+    },
+    {
+      "token": "c650",
+      "weight": 4.149066949889953
+    }
+  ],
+  "comp.windows.x": [
+    {
+      "token": "motif",
+      "weight": 8.61620334247408
+    },
+    {
+      "token": "server",
+      "weight": 8.609403865618724
+    },
+    {
+      "token": "window",
+      "weight": 8.226801848129025
+    },
+    {
+      "token": "widget",
+      "weight": 7.377236646097612
+    },
+    {
+      "token": "xterm",
+      "weight": 6.646206499597814
+    },
+    {
+      "token": "x11r5",
+      "weight": 6.408527077411656
+    },
+    {
+      "token": "sun",
+      "weight": 5.637946212400932
+    },
+    {
+      "token": "mit",
+      "weight": 5.409432366443337
+    },
+    {
+      "token": "widgets",
+      "weight": 5.05095652550604
+    },
+    {
+      "token": "application",
+      "weight": 4.99142519364764
+    },
+    {
+      "token": "hi",
+      "weight": 4.983251882186051
+    },
+    {
+      "token": "clients",
+      "weight": 4.761661893941762
+    },
+    {
+      "token": "user",
+      "weight": 4.455298336607731
+    },
+    {
+      "token": "x11",
+      "weight": 4.24963864397751
+    },
+    {
+      "token": "xlib",
+      "weight": 4.1964546900968935
+    }
+  ],
+  "misc.forsale": [
+    {
+      "token": "sale",
+      "weight": 9.652385683818574
+    },
+    {
+      "token": "sell",
+      "weight": 7.4879527573120646
+    },
+    {
+      "token": "offer",
+      "weight": 6.584771688905462
+    },
+    {
+      "token": "shipping",
+      "weight": 6.200052156513904
+    },
+    {
+      "token": "condition",
+      "weight": 5.0902600139088525
+    },
+    {
+      "token": "price",
+      "weight": 4.937249469436805
+    },
+    {
+      "token": "asking",
+      "weight": 4.852845984785648
+    },
+    {
+      "token": "email",
+      "weight": 4.463241939168608
+    },
+    {
+      "token": "new",
+      "weight": 4.448720785851806
+    },
+    {
+      "token": "interested",
+      "weight": 4.3961637354869385
+    },
+    {
+      "token": "looking",
+      "weight": 4.352642509866556
+    },
+    {
+      "token": "selling",
+      "weight": 4.264996894338121
+    },
+    {
+      "token": "make offer",
+      "weight": 4.062697799262622
+    },
+    {
+      "token": "00",
+      "weight": 3.9419629841884176
+    },
+    {
+      "token": "offers",
+      "weight": 3.845714264405155
+    }
+  ],
+  "rec.autos": [
+    {
+      "token": "car",
+      "weight": 14.234978609709689
+    },
+    {
+      "token": "cars",
+      "weight": 8.328182824708442
+    },
+    {
+      "token": "oil",
+      "weight": 5.4505197528506475
+    },
+    {
+      "token": "dealer",
+      "weight": 5.22635181925584
+    },
+    {
+      "token": "toyota",
+      "weight": 4.993696162365335
+    },
+    {
+      "token": "ford",
+      "weight": 4.7279014495114735
+    },
+    {
+      "token": "engine",
+      "weight": 4.495784250195517
+    },
+    {
+      "token": "vw",
+      "weight": 4.237340548258928
+    },
+    {
+      "token": "gt",
+      "weight": 4.161094381890908
+    },
+    {
+      "token": "honda",
+      "weight": 3.682562345954412
+    },
+    {
+      "token": "ites",
+      "weight": 3.5240400925275646
+    },
+    {
+      "token": "opel",
+      "weight": 3.4031449714152378
+    },
+    {
+      "token": "autos",
+      "weight": 3.3483549396687478
+    },
+    {
+      "token": "air",
+      "weight": 3.3481503388910205
+    },
+    {
+      "token": "sho",
+      "weight": 3.292541204320526
+    }
+  ],
+  "rec.motorcycles": [
+    {
+      "token": "bike",
+      "weight": 13.62149155039334
+    },
+    {
+      "token": "dod",
+      "weight": 8.198916438596775
+    },
+    {
+      "token": "ride",
+      "weight": 7.200071539018183
+    },
+    {
+      "token": "bikes",
+      "weight": 7.155015015854572
+    },
+    {
+      "token": "motorcycle",
+      "weight": 7.059787827708352
+    },
+    {
+      "token": "helmet",
+      "weight": 6.591346386814166
+    },
+    {
+      "token": "riding",
+      "weight": 6.436432095992288
+    },
+    {
+      "token": "harley",
+      "weight": 5.394394749318408
+    },
+    {
+      "token": "bmw",
+      "weight": 5.366889979462179
+    },
+    {
+      "token": "motorcycles",
+      "weight": 4.934861331755178
+    },
+    {
+      "token": "tony",
+      "weight": 4.748615334421058
+    },
+    {
+      "token": "dog",
+      "weight": 4.443650767231063
+    },
+    {
+      "token": "kawasaki",
+      "weight": 4.133753129411039
+    },
+    {
+      "token": "cop",
+      "weight": 4.109618218346714
+    },
+    {
+      "token": "moto",
+      "weight": 4.032277111684683
+    }
+  ],
+  "rec.sport.baseball": [
+    {
+      "token": "baseball",
+      "weight": 8.406815406639414
+    },
+    {
+      "token": "year",
+      "weight": 5.907074432830082
+    },
+    {
+      "token": "stadium",
+      "weight": 5.856296081721773
+    },
+    {
+      "token": "cubs",
+      "weight": 5.496319598441309
+    },
+    {
+      "token": "team",
+      "weight": 5.328897694708167
+    },
+    {
+      "token": "phillies",
+      "weight": 5.062721929489295
+    },
+    {
+      "token": "braves",
+      "weight": 4.883706273699191
+    },
+    {
+      "token": "players",
+      "weight": 4.853256185564396
+    },
+    {
+      "token": "game",
+      "weight": 4.844132759819172
+    },
+    {
+      "token": "ball",
+      "weight": 4.8014428754790135
+    },
+    {
+      "token": "runs",
+      "weight": 4.672782228668122
+    },
+    {
+      "token": "alomar",
+      "weight": 4.582494594362995
+    },
+    {
+      "token": "games",
+      "weight": 4.533106897613183
+    },
+    {
+      "token": "jewish",
+      "weight": 4.327375631939633
+    },
+    {
+      "token": "mets",
+      "weight": 4.220666634835747
+    }
+  ],
+  "rec.sport.hockey": [
+    {
+      "token": "hockey",
+      "weight": 10.706861041996214
+    },
+    {
+      "token": "team",
+      "weight": 7.627825853700837
+    },
+    {
+      "token": "game",
+      "weight": 6.868977152943562
+    },
+    {
+      "token": "nhl",
+      "weight": 6.690482462826874
+    },
+    {
+      "token": "season",
+      "weight": 5.8317309982188625
+    },
+    {
+      "token": "mask",
+      "weight": 5.353988718592043
+    },
+    {
+      "token": "puck",
+      "weight": 5.351718933883714
+    },
+    {
+      "token": "play",
+      "weight": 5.151491201325236
+    },
+    {
+      "token": "playoff",
+      "weight": 4.997758028683507
+    },
+    {
+      "token": "games",
+      "weight": 4.904533210870777
+    },
+    {
+      "token": "playoffs",
+      "weight": 4.7573940293750425
+    },
+    {
+      "token": "leafs",
+      "weight": 4.73625090870904
+    },
+    {
+      "token": "players",
+      "weight": 4.5691158623754
+    },
+    {
+      "token": "cup",
+      "weight": 4.4224125977725315
+    },
+    {
+      "token": "roger",
+      "weight": 4.343334672431441
+    }
+  ],
+  "sci.crypt": [
+    {
+      "token": "encryption",
+      "weight": 9.330019566654174
+    },
+    {
+      "token": "clipper",
+      "weight": 9.003334081511479
+    },
+    {
+      "token": "key",
+      "weight": 7.922137310946583
+    },
+    {
+      "token": "nsa",
+      "weight": 7.562191223800886
+    },
+    {
+      "token": "government",
+      "weight": 5.874500273808279
+    },
+    {
+      "token": "security",
+      "weight": 5.8580090897079655
+    },
+    {
+      "token": "keys",
+      "weight": 5.718331583875222
+    },
+    {
+      "token": "privacy",
+      "weight": 5.352254388744204
+    },
+    {
+      "token": "pgp",
+      "weight": 5.033988540980056
+    },
+    {
+      "token": "crypto",
+      "weight": 4.852488060854341
+    },
+    {
+      "token": "tempest",
+      "weight": 4.844193117240769
+    },
+    {
+      "token": "clinton",
+      "weight": 4.758859726247565
+    },
+    {
+      "token": "des",
+      "weight": 4.695487337901947
+    },
+    {
+      "token": "chip",
+      "weight": 4.654994675141506
+    },
+    {
+      "token": "voice",
+      "weight": 3.9593740970414433
+    }
+  ],
+  "sci.electronics": [
+    {
+      "token": "circuit",
+      "weight": 7.133907534583406
+    },
+    {
+      "token": "electronics",
+      "weight": 5.974546871389305
+    },
+    {
+      "token": "power",
+      "weight": 4.920694392326157
+    },
+    {
+      "token": "8051",
+      "weight": 4.75721446780864
+    },
+    {
+      "token": "motorola",
+      "weight": 4.690935338522264
+    },
+    {
+      "token": "chips",
+      "weight": 4.118583898387729
+    },
+    {
+      "token": "voltage",
+      "weight": 4.117675908133585
+    },
+    {
+      "token": "dial",
+      "weight": 3.9894810328673147
+    },
+    {
+      "token": "catalog",
+      "weight": 3.872470341920363
+    },
+    {
+      "token": "tv",
+      "weight": 3.828853578449018
+    },
+    {
+      "token": "cci",
+      "weight": 3.7594557372496387
+    },
+    {
+      "token": "ground",
+      "weight": 3.7151933613912456
+    },
+    {
+      "token": "used",
+      "weight": 3.677166933043506
+    },
+    {
+      "token": "radio",
+      "weight": 3.589508709103593
+    },
+    {
+      "token": "wire",
+      "weight": 3.5037811639288363
+    }
+  ],
+  "sci.med": [
+    {
+      "token": "doctor",
+      "weight": 6.561371611083578
+    },
+    {
+      "token": "msg",
+      "weight": 6.407972440478019
+    },
+    {
+      "token": "medical",
+      "weight": 5.985750166087963
+    },
+    {
+      "token": "disease",
+      "weight": 5.749618552593227
+    },
+    {
+      "token": "treatment",
+      "weight": 5.011563981138499
+    },
+    {
+      "token": "health",
+      "weight": 4.958465379363627
+    },
+    {
+      "token": "pain",
+      "weight": 4.632761888463511
+    },
+    {
+      "token": "effects",
+      "weight": 4.501080919903537
+    },
+    {
+      "token": "cancer",
+      "weight": 4.160458476315396
+    },
+    {
+      "token": "patients",
+      "weight": 4.031779591278085
+    },
+    {
+      "token": "needles",
+      "weight": 4.0077100866913495
+    },
+    {
+      "token": "diet",
+      "weight": 4.000716442996885
+    },
+    {
+      "token": "syndrome",
+      "weight": 3.77193313594319
+    },
+    {
+      "token": "corn",
+      "weight": 3.70189151242327
+    },
+    {
+      "token": "symptoms",
+      "weight": 3.582219642396821
+    }
+  ],
+  "sci.space": [
+    {
+      "token": "space",
+      "weight": 13.861933269463076
+    },
+    {
+      "token": "orbit",
+      "weight": 7.485052206482414
+    },
+    {
+      "token": "launch",
+      "weight": 6.35755871035668
+    },
+    {
+      "token": "nasa",
+      "weight": 6.285600251655571
+    },
+    {
+      "token": "spacecraft",
+      "weight": 5.76184213434539
+    },
+    {
+      "token": "moon",
+      "weight": 5.639755450150867
+    },
+    {
+      "token": "shuttle",
+      "weight": 5.066806708106061
+    },
+    {
+      "token": "solar",
+      "weight": 4.760223641788134
+    },
+    {
+      "token": "earth",
+      "weight": 4.617647507362573
+    },
+    {
+      "token": "flight",
+      "weight": 4.28909737569852
+    },
+    {
+      "token": "lunar",
+      "weight": 4.201871977823297
+    },
+    {
+      "token": "mars",
+      "weight": 3.8272621918102714
+    },
+    {
+      "token": "funding",
+      "weight": 3.590197031010075
+    },
+    {
+      "token": "mining",
+      "weight": 3.5737648330995
+    },
+    {
+      "token": "allen",
+      "weight": 3.5428576344874747
+    }
+  ],
+  "soc.religion.christian": [
+    {
+      "token": "god",
+      "weight": 10.816592083902455
+    },
+    {
+      "token": "church",
+      "weight": 7.65806843681873
+    },
+    {
+      "token": "christians",
+      "weight": 6.354046805179356
+    },
+    {
+      "token": "christ",
+      "weight": 6.063525600024886
+    },
+    {
+      "token": "jesus",
+      "weight": 5.93452296378371
+    },
+    {
+      "token": "christian",
+      "weight": 5.564818703270236
+    },
+    {
+      "token": "christianity",
+      "weight": 5.331483481303104
+    },
+    {
+      "token": "bible",
+      "weight": 4.650790018122199
+    },
+    {
+      "token": "marriage",
+      "weight": 4.6164751762280964
+    },
+    {
+      "token": "faith",
+      "weight": 4.501581501129624
+    },
+    {
+      "token": "scripture",
+      "weight": 4.04543355269362
+    },
+    {
+      "token": "easter",
+      "weight": 4.038200216923802
+    },
+    {
+      "token": "resurrection",
+      "weight": 3.91443050340384
+    },
+    {
+      "token": "lord",
+      "weight": 3.897707315950409
+    },
+    {
+      "token": "love",
+      "weight": 3.8965407213968453
+    }
+  ],
+  "talk.politics.guns": [
+    {
+      "token": "gun",
+      "weight": 11.652267296343597
+    },
+    {
+      "token": "guns",
+      "weight": 8.584805730686096
+    },
+    {
+      "token": "weapons",
+      "weight": 7.130661548477273
+    },
+    {
+      "token": "firearms",
+      "weight": 6.089034900698863
+    },
+    {
+      "token": "fbi",
+      "weight": 4.986305836678294
+    },
+    {
+      "token": "nra",
+      "weight": 4.68145253854532
+    },
+    {
+      "token": "weapon",
+      "weight": 4.378625337285978
+    },
+    {
+      "token": "law",
+      "weight": 4.225921453231508
+    },
+    {
+      "token": "firearm",
+      "weight": 4.074086281937707
+    },
+    {
+      "token": "batf",
+      "weight": 3.9295127382185804
+    },
+    {
+      "token": "bd",
+      "weight": 3.9054485857948174
+    },
+    {
+      "token": "atf",
+      "weight": 3.7989773135668257
+    },
+    {
+      "token": "government",
+      "weight": 3.7947696654582423
+    },
+    {
+      "token": "killed",
+      "weight": 3.7587597789422103
+    },
+    {
+      "token": "police",
+      "weight": 3.4083942954938204
+    }
+  ],
+  "talk.politics.mideast": [
+    {
+      "token": "israel",
+      "weight": 10.478961906385077
+    },
+    {
+      "token": "israeli",
+      "weight": 8.47731511328832
+    },
+    {
+      "token": "arab",
+      "weight": 6.036068423200425
+    },
+    {
+      "token": "turkish",
+      "weight": 5.838588740366248
+    },
+    {
+      "token": "jews",
+      "weight": 5.687170352556553
+    },
+    {
+      "token": "loser",
+      "weight": 5.201628287318828
+    },
+    {
+      "token": "turkey",
+      "weight": 4.570530429584043
+    },
+    {
+      "token": "arabs",
+      "weight": 4.561272270932496
+    },
+    {
+      "token": "armenians",
+      "weight": 4.550908764051642
+    },
+    {
+      "token": "jewish",
+      "weight": 4.301630054633825
+    },
+    {
+      "token": "retarded",
+      "weight": 4.178811679433456
+    },
+    {
+      "token": "armenian",
+      "weight": 4.0597994609906705
+    },
+    {
+      "token": "lebanon",
+      "weight": 4.031940488748033
+    },
+    {
+      "token": "serdar",
+      "weight": 3.979407078614882
+    },
+    {
+      "token": "mr",
+      "weight": 3.929341546957016
+    }
+  ],
+  "talk.politics.misc": [
+    {
+      "token": "clinton",
+      "weight": 6.053541858123349
+    },
+    {
+      "token": "tax",
+      "weight": 5.491763275809515
+    },
+    {
+      "token": "government",
+      "weight": 4.446735527455503
+    },
+    {
+      "token": "homosexuals",
+      "weight": 4.212416826267455
+    },
+    {
+      "token": "people",
+      "weight": 4.211690828978059
+    },
+    {
+      "token": "trial",
+      "weight": 4.100860288277359
+    },
+    {
+      "token": "men",
+      "weight": 4.046528323017442
+    },
+    {
+      "token": "congress",
+      "weight": 3.9929504303299215
+    },
+    {
+      "token": "libertarians",
+      "weight": 3.9570213973001898
+    },
+    {
+      "token": "drugs",
+      "weight": 3.9277118170233187
+    },
+    {
+      "token": "gay",
+      "weight": 3.922212137811331
+    },
+    {
+      "token": "presidents",
+      "weight": 3.9160532462031785
+    },
+    {
+      "token": "yeah",
+      "weight": 3.855816441585556
+    },
+    {
+      "token": "bush",
+      "weight": 3.7083794207081127
+    },
+    {
+      "token": "taxes",
+      "weight": 3.656871223607458
+    }
+  ],
+  "talk.religion.misc": [
+    {
+      "token": "god",
+      "weight": 6.127148924486342
+    },
+    {
+      "token": "christian",
+      "weight": 6.088887238586404
+    },
+    {
+      "token": "jesus",
+      "weight": 5.264402888400917
+    },
+    {
+      "token": "koresh",
+      "weight": 5.213106041142997
+    },
+    {
+      "token": "christians",
+      "weight": 5.042667394678086
+    },
+    {
+      "token": "kent",
+      "weight": 4.813281305092815
+    },
+    {
+      "token": "objective",
+      "weight": 4.463504791741351
+    },
+    {
+      "token": "wrong",
+      "weight": 3.6995925500799434
+    },
+    {
+      "token": "fbi",
+      "weight": 3.68652850439787
+    },
+    {
+      "token": "bible",
+      "weight": 3.5631444548004443
+    },
+    {
+      "token": "rosicrucian",
+      "weight": 3.528106808159237
+    },
+    {
+      "token": "666",
+      "weight": 3.481775834728101
+    },
+    {
+      "token": "ignorance",
+      "weight": 3.302612194321823
+    },
+    {
+      "token": "ekr",
+      "weight": 3.2920380729371597
+    },
+    {
+      "token": "beliefs",
+      "weight": 3.2855087556652354
+    }
+  ]
+}
