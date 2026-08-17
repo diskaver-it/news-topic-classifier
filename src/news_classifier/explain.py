@@ -21,7 +21,7 @@ from typing import Dict, List
 import numpy as np
 from sklearn.pipeline import Pipeline
 
-from . import config
+from . import calibration, config
 
 
 def top_features_per_class(
@@ -61,6 +61,7 @@ def explain_prediction(
     text: str,
     target_names: List[str],
     top_k: int = 10,
+    temperature: float = 1.0,
 ) -> Dict:
     """Explain one prediction: the topic, the probabilities, and the why.
 
@@ -68,6 +69,12 @@ def explain_prediction(
     a token only matters here if it actually appears (non-zero TF-IDF). The
     contribution of token t to the predicted class is tfidf(t) * weight[c, t],
     and ranking those surfaces the words that actually swung the decision.
+
+    `temperature` applies the calibration fitted in training (see
+    calibration.py), so the confidence shown to a user is the one the reports
+    measured rather than the raw softmax. It cannot change the predicted topic
+    or the contributions - scaling is monotone and applies to every class
+    equally - so the explanation is unaffected either way.
 
     Returns a dict ready to hand straight to an API response or a UI, including
     the runner-up class - useful because the interesting cases are the close
@@ -78,7 +85,11 @@ def explain_prediction(
 
     # Vectorise once; reuse the sparse row for both scoring and attribution.
     tfidf_row = vectoriser.transform([text])
-    probabilities = pipeline.predict_proba([text])[0]
+    probabilities = (
+        pipeline.predict_proba([text])[0]
+        if temperature == 1.0
+        else calibration.calibrated_probabilities(pipeline, [text], temperature)[0]
+    )
 
     ranked = np.argsort(probabilities)[::-1]
     top_class_idx = int(ranked[0])

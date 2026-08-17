@@ -6,6 +6,11 @@ Paste any piece of text; the app shows the predicted topic, the probability
 spread across all 20 topics, and - the interesting part - which words in *your*
 text drove the decision. That last panel is only possible because the model is
 linear (see src/news_classifier/explain.py).
+
+The confidence shown is the calibrated one (see src/news_classifier/
+calibration.py), and below the abstention threshold the app says it is not sure
+instead of presenting a guess as an answer. A demo that always produces a
+confident-looking topic for any input misrepresents the model.
 """
 
 from __future__ import annotations
@@ -48,6 +53,11 @@ EXAMPLES = {
         "I swapped the motherboard but now the machine won't POST. The RAM is "
         "seated, the CPU fan spins, but I get no video. Could it be the power "
         "supply, or did I fry something installing the new card?"
+    ),
+    "None of the 20 topics": (
+        "The sourdough needs a longer autolyse if the flour is high-protein. "
+        "I fold it three times over four hours, then retard the dough overnight "
+        "in the fridge before baking it in a preheated dutch oven."
     ),
 }
 
@@ -124,11 +134,14 @@ def main() -> None:
 
     pipeline = artifact["pipeline"]
     target_names = artifact["target_names"]
+    # Older artifacts predate calibration; 1.0 and no threshold reproduce the
+    # previous behaviour rather than crashing the demo.
+    temperature = artifact.get("temperature", 1.0)
+    abstain_threshold = artifact.get("abstain_threshold")
 
     with st.sidebar:
         st.header("About")
-        st.markdown(
-            f"""
+        about = f"""
 - **{artifact['n_train_docs']:,}** training posts, **{len(target_names)}** topics
 - Model: TF-IDF (1–2 grams) → logistic regression, `C={artifact['best_C']}`
 - Trained: {artifact['trained_at'][:10]}
@@ -137,7 +150,14 @@ def main() -> None:
 The **word contributions** panel is possible because the model is linear:
 each word's push toward a topic is its TF-IDF value times the model weight.
 """
-        )
+        if abstain_threshold:
+            about += (
+                f"\nConfidence is temperature-scaled (`T={temperature:.2f}`), so a "
+                f"percentage shown here is one the reports measured. Below "
+                f"**{abstain_threshold:.0%}** the app says it is not sure instead "
+                f"of guessing.\n"
+            )
+        st.markdown(about)
         st.markdown("[Source & write-up](https://github.com/diskaver-it/news-topic-classifier)")
 
     choice = st.selectbox("Load an example, or write your own below:", list(EXAMPLES))
@@ -155,12 +175,25 @@ each word's push toward a topic is its TF-IDF value times the model weight.
         st.warning("Enter some text first.")
         return
 
-    result = explain.explain_prediction(pipeline, text, target_names)
+    result = explain.explain_prediction(
+        pipeline, text, target_names, temperature=temperature
+    )
+    abstains = bool(abstain_threshold and result["confidence"] < abstain_threshold)
 
     top, right = st.columns([1, 1])
     with top:
         st.subheader("Prediction")
-        st.metric(result["predicted_topic"], f"{result['confidence']:.1%} confident")
+        if abstains:
+            st.warning(
+                f"**Not confident enough to answer.** The best guess is "
+                f"`{result['predicted_topic']}` at {result['confidence']:.1%}, "
+                f"below the {abstain_threshold:.0%} cutoff — this text may not "
+                f"belong to any of the 20 newsgroups, or it may sit between two "
+                f"of them. The ranking below is still shown; it is just not "
+                f"worth acting on."
+            )
+        else:
+            st.metric(result["predicted_topic"], f"{result['confidence']:.1%} confident")
         st.caption(
             f"Runner-up: **{result['runner_up_topic']}** "
             f"({result['runner_up_confidence']:.1%})"
