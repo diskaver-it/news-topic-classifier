@@ -133,6 +133,53 @@ with the super-categories (`comp.*`, the `talk.*`/religion group):
 A classifier that confuses hockey with cryptography is broken; one that confuses
 two flavours of PC hardware is behaving sensibly on a genuinely fuzzy boundary.
 
+### 4. The confidence means something — so the model can refuse to answer
+
+The demo prints a probability next to every prediction, and for a while nobody
+had checked whether that number was worth anything. It was not:
+
+| | Mean confidence | Accuracy | ECE | MCE |
+|---|---|---|---|---|
+| Raw softmax | 0.551 | 0.695 | **0.145** | 0.286 |
+| After temperature scaling | 0.733 | 0.695 | **0.052** | 0.096 |
+
+The model was **under-confident** — claiming 55% while being right 70% of the
+time. That is the less famous direction (neural networks are known for the
+opposite) and it is what L2 regularisation on sparse text does: shrinking the
+weights shrinks the logits, and the softmax flattens.
+
+One parameter fixes it. Temperature scaling divides every logit by a single
+number, `T = 0.566` here, fitted by minimising NLL on **out-of-fold** logits —
+in-sample logits are the model's opinion of documents it has already seen the
+answers to. Because it is monotone and applied to every class equally, the
+arg-max cannot move: accuracy, macro-F1, the confusion matrix and every word
+contribution are identical before and after. A test asserts exactly that.
+
+![Calibration and abstention](reports/figures/confidence.png)
+
+**And now the confidence can carry a decision.** With 20 topics and no "none of
+the above" class, the model is forced to name a newsgroup for a sourdough recipe.
+A calibrated confidence turns that into an abstention rule — answer above the
+cutoff, send the rest to a human:
+
+```
+threshold chosen on the training folds:  0.63  (68.0% coverage at 0.902 accuracy)
+the same threshold on the holdout:             67.0% coverage at 0.851 accuracy
+                                               vs 0.695 when answering everything
+```
+
+Two things worth saying about those numbers. The threshold is picked on the
+training folds and only *measured* on the holdout — choosing the cutoff that hits
+90% on the test set and then reporting 90% on the test set would be circular.
+And it misses: it targeted 0.90 and delivered 0.851. That gap is the by-date
+split doing its job. The test posts were written later than the training posts,
+so a threshold tuned on the training period degrades on them — which is precisely
+what a threshold does after deployment, visible here rather than six months in.
+
+Fifteen and a half points of accuracy on two thirds of the traffic, in exchange
+for routing the other third to a person, is a real product trade — and the
+right-hand curve above is the exchange rate at every other cutoff.
+
 ---
 
 ## The interactive demo
@@ -146,6 +193,12 @@ probability spread across all 20 topics, and the per-word contribution panel.
 The demo loads the trained artifact and reuses the exact `explain_prediction`
 function the tests cover — no logic duplicated between the app and the library.
 
+The confidence shown is the calibrated one, and below the 0.63 cutoff the app
+says it is not sure instead of presenting a guess as an answer — the built-in
+"None of the 20 topics" example is there to show it happening. Both the
+temperature and the threshold travel inside `model.joblib`, so the demo cannot
+drift away from the numbers in `reports/`.
+
 ---
 
 ## Running it
@@ -156,12 +209,13 @@ cd news-topic-classifier
 pip install -e ".[dev]"
 
 python -m news_classifier.train        # downloads 20NG once (~15 MB), trains, writes reports/
-pytest -q                              # 24 tests, no network required
+pytest -q                              # 45 tests, no network required
 streamlit run app/streamlit_app.py     # the demo
 ```
 
 Training takes a couple of minutes, most of it the cross-validation sweep over
-`C`. The download happens once and is cached under `data/raw/`.
+`C` and the out-of-fold pass the temperature is fitted on. The download happens
+once and is cached under `data/raw/`.
 
 ---
 
@@ -199,11 +253,13 @@ src/news_classifier/
 ├── train.py      CV tuning, fit, the leakage experiment, persistence
 ├── evaluate.py   macro-F1, per-class report, top confusions
 ├── explain.py    per-prediction word contributions + per-topic defining words
-└── plots.py      confusion matrix, per-class F1, top-features figures
+├── calibration.py temperature scaling, ECE, and the abstention threshold
+└── plots.py      confusion matrix, per-class F1, top features, calibration figures
 
 app/streamlit_app.py   the interactive demo
-tests/                 24 tests on a synthetic corpus — no network, ~10s
-reports/               metrics.json, leakage_comparison.json, top_features_per_topic.json, figures/
+tests/                 45 tests on a synthetic corpus — no network, ~10s
+reports/               metrics.json, leakage_comparison.json, calibration.json,
+                       top_features_per_topic.json, figures/
 ```
 
 Raw data and the trained artifact are gitignored — both are regenerated by
@@ -217,14 +273,19 @@ Raw data and the trained artifact are gitignored — both are regenerated by
   on raw accuracy. It would also be slower, larger, and far harder to explain —
   the trade-off is the point, not an oversight. A fair comparison would be a good
   next step.
-- **English, single-label, topic-level.** The model assumes exactly one of these
-  20 topics; it has no "none of the above" option and no notion of documents that
-  span two topics.
+- **English, single-label, topic-level.** The model still assumes one of these 20
+  topics; abstention lets it decline to answer, which is not the same as having a
+  "none of the above" class, and it has no notion of a document spanning two
+  topics.
 - **Vocabulary is frozen at training time.** New jargon (a product or event that
   post-dates the corpus) contributes nothing until the model is retrained.
-- **No calibration pass.** The probabilities are usable for ranking and for the
-  demo, but have not been explicitly calibrated; treat a "99%" as "very
-  confident", not as a literal frequency.
+- **Calibration is global, not per class.** One temperature for all 20 topics.
+  The topics the model handles badly (talk.religion.misc, F1 0.38) are probably
+  miscalibrated in their own direction, and per-class or vector scaling would
+  catch that — at the cost of 20 parameters fitted on far less data each.
+- **The abstention threshold is one number, chosen once.** A real router would
+  set it per topic, or from the cost of a wrong answer versus the cost of human
+  review, rather than from a round 90% target.
 
 ## Licence & attribution
 
