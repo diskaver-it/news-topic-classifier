@@ -23,6 +23,7 @@ FIGURES_DIR = REPORTS_DIR / "figures"
 METRICS_FILE = REPORTS_DIR / "metrics.json"
 LEAKAGE_REPORT_FILE = REPORTS_DIR / "leakage_comparison.json"
 TOP_FEATURES_FILE = REPORTS_DIR / "top_features_per_topic.json"
+CALIBRATION_REPORT_FILE = REPORTS_DIR / "calibration.json"
 
 # --------------------------------------------------------------------------
 # Dataset
@@ -91,3 +92,24 @@ LOGREG_C = 1.0
 
 # How many top tokens to store per topic for the report and the demo.
 TOP_FEATURES_PER_TOPIC = 15
+
+# --------------------------------------------------------------------------
+# Confidence
+# --------------------------------------------------------------------------
+# The demo prints a probability next to every prediction, so that probability
+# has to mean something. See calibration.py: a temperature is fitted on
+# out-of-fold logits and stored with the model, and the calibrated confidence
+# then supports an abstention rule ("I am not sure enough - send this to a
+# human") instead of forcing a guess among 20 topics.
+CALIBRATION_BINS = 15
+
+# Folds used to produce the out-of-fold logits the temperature is fitted on.
+# Fitting it on in-sample logits would calibrate against predictions the model
+# has already seen the answers to, which is how a model ends up "calibrated"
+# only on its training set.
+CALIBRATION_CV_FOLDS = 3
+
+# The operating point for abstention: answer only where the model would be
+# right this often. 0.90 against a 0.695 overall accuracy is a real product
+# choice - it trades coverage for a usable guarantee on what is answered.
+ABSTAIN_TARGET_ACCURACY = 0.90
