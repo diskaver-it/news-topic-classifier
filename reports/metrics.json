@@ -1,5 +1,5 @@
 {
-  "trained_at": "2026-07-28T05:50:43+00:00",
+  "trained_at": "2026-08-17T09:15:16+00:00",
   "dataset": {
     "train_docs": 11314,
     "test_docs": 7532,
@@ -214,6 +214,18 @@
       "same_supercategory": true
     }
   ],
+  "confidence": {
+    "temperature": 0.5660606327370626,
+    "ece_before": 0.14469171175871368,
+    "ece_after": 0.05214471605695625,
+    "abstention": {
+      "threshold": 0.63,
+      "coverage": 0.6695432819968136,
+      "n_answered": 5043,
+      "selective_accuracy": 0.851279000594884,
+      "accuracy_if_answering_everything": 0.6950345193839618
+    }
+  },
   "environment": {
     "sklearn": "1.7.2",
     "python": "3.13.1"

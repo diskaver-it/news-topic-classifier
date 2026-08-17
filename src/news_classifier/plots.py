@@ -97,15 +97,74 @@ def plot_top_features(top_features: Dict[str, List[Dict[str, float]]],
     _save(fig, "top_features.png")
 
 
+def plot_confidence(confidence: Dict) -> None:
+    """Reliability before and after scaling, and what abstaining buys.
+
+    Left: the reliability diagram. A perfectly calibrated model sits on the
+    diagonal; points *above* it are under-confidence, which is where a
+    regularised linear model usually lives and is the opposite of the
+    over-confidence neural networks are famous for.
+
+    Right: selective accuracy against coverage. This is the chart that turns a
+    calibrated probability into a product decision - answer less, be right more,
+    and here is the exchange rate.
+    """
+    fig, (ax_left, ax_right) = plt.subplots(1, 2, figsize=(11, 4.2))
+
+    ax_left.plot([0, 1], [0, 1], "k--", linewidth=1, label="perfect calibration")
+    for label, colour in (("uncalibrated", "#C44E52"), ("calibrated", "#4C72B0")):
+        bins = [b for b in confidence["reliability_bins"][label] if b["count"] > 0]
+        ax_left.plot([b["mean_confidence"] for b in bins],
+                     [b["accuracy"] for b in bins],
+                     "o-", color=colour, markersize=4, linewidth=1.6,
+                     label=f"{label} (ECE "
+                           f"{confidence['calibration'][label]['ece']:.3f})")
+    ax_left.set_xlabel("confidence claimed")
+    ax_left.set_ylabel("accuracy observed")
+    ax_left.set_title("Reliability: does 80% mean 80%?", fontsize=10)
+    ax_left.legend(fontsize=8, loc="upper left")
+    ax_left.grid(alpha=0.3)
+
+    curve = [p for p in confidence["risk_coverage_curve"] if p["coverage"] > 0.02]
+    ax_right.plot([p["coverage"] for p in curve],
+                  [p["selective_accuracy"] for p in curve],
+                  color="#55A868", linewidth=2)
+
+    holdout = confidence.get("operating_point_measured_on_holdout") or {}
+    if holdout:
+        ax_right.plot(holdout["coverage"], holdout["selective_accuracy"], "o",
+                      color="#C44E52", markersize=8,
+                      label=f"chosen cutoff {holdout['threshold']:.2f}: "
+                            f"{100 * holdout['coverage']:.0f}% answered at "
+                            f"{holdout['selective_accuracy']:.3f}")
+        ax_right.axhline(holdout["accuracy_if_answering_everything"], color="black",
+                         linestyle="--", linewidth=1,
+                         label=f"answering everything: "
+                               f"{holdout['accuracy_if_answering_everything']:.3f}")
+        ax_right.legend(fontsize=8, loc="lower left")
+
+    ax_right.set_xlabel("coverage (share of posts answered)")
+    ax_right.set_ylabel("accuracy on the posts answered")
+    ax_right.set_title("Refusing to answer buys accuracy", fontsize=10)
+    ax_right.grid(alpha=0.3)
+
+    fig.suptitle("Calibrated confidence, and the abstention it enables", fontsize=11)
+    fig.tight_layout()
+    _save(fig, "confidence.png")
+
+
 def make_all_figures(
     y_true: List[int],
     y_pred: List[int],
     target_names: List[str],
     per_class: Dict,
     top_features: Dict[str, List[Dict[str, float]]],
+    confidence: Dict | None = None,
 ) -> None:
     plot_confusion_matrix(y_true, y_pred, target_names)
     plot_per_class_f1(per_class, target_names)
     # A representative spread across super-categories.
     sample = ["sci.space", "rec.sport.hockey", "comp.graphics", "talk.politics.mideast"]
     plot_top_features(top_features, [t for t in sample if t in top_features])
+    if confidence:
+        plot_confidence(confidence)

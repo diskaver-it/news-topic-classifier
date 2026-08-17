@@ -2,13 +2,15 @@
 
 Run with:  python -m news_classifier.train
 
-Three stages, and the last two are what lift this above a fit-predict script:
+Four stages, and the middle two are what lift this above a fit-predict script:
 
   1. tune the regularisation strength by cross-validation, then fit and score
      on the official holdout;
-  2. the leakage experiment - retrain with the post headers/footers/quotes left
+  2. calibrate the confidence and derive the point at which the model should
+     refuse to answer rather than guess among 20 topics;
+  3. the leakage experiment - retrain with the post headers/footers/quotes left
      in and measure how many points of "accuracy" they hand over for free;
-  3. persist the model, the per-topic defining words, and the report figures.
+  4. persist the model, the per-topic defining words, and the report figures.
 """
 
 from __future__ import annotations
@@ -21,9 +23,9 @@ from typing import Dict
 
 import numpy as np
 import sklearn
-from sklearn.model_selection import GridSearchCV, StratifiedKFold
+from sklearn.model_selection import GridSearchCV, StratifiedKFold, cross_val_predict
 
-from . import config, data, evaluate, explain, model
+from . import calibration, config, data, evaluate, explain, model
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s  %(levelname)-7s %(message)s"
@@ -58,6 +60,105 @@ def tune_regularisation(X_train, y_train) -> float:
                 grid.best_score_)
 
     return float(grid.best_params_["clf__C"])
+
+
+def calibrate_and_choose_abstention(pipeline, ds, best_c: float) -> Dict:
+    """Make the confidence mean something, then use it to decide when to refuse.
+
+    Two rules govern this, and both are the reason it is a separate stage rather
+    than three lines appended to the evaluation:
+
+    * **the temperature is fitted out of fold.** In-sample logits are the
+      model's opinion of documents whose answers it has already seen, and a
+      temperature fitted on those calibrates the model to its own training set.
+      `cross_val_predict` gives honest logits for every training document at the
+      cost of a few extra fits.
+
+    * **the abstention threshold is chosen on the training folds, and only
+      *measured* on the holdout.** Picking the cutoff that hits 90% accuracy on
+      the test set and then reporting that it hits 90% accuracy on the test set
+      is circular; the number worth quoting is the coverage the threshold turns
+      out to give on data it was not chosen on.
+    """
+    logger.info("Fitting temperature on out-of-fold logits (%d folds) ...",
+                config.CALIBRATION_CV_FOLDS)
+
+    oof_logits = cross_val_predict(
+        model.build_pipeline(C=best_c),
+        ds.X_train,
+        ds.y_train,
+        cv=StratifiedKFold(
+            n_splits=config.CALIBRATION_CV_FOLDS,
+            shuffle=True,
+            random_state=config.RANDOM_STATE,
+        ),
+        method="decision_function",
+        n_jobs=-1,
+    )
+    temperature = calibration.fit_temperature(oof_logits, ds.y_train)
+    direction = ("sharpens - the model was under-confident" if temperature < 1
+                 else "softens - the model was over-confident")
+    logger.info("  temperature = %.4f  (%s)", temperature, direction)
+
+    test_logits = pipeline.decision_function(ds.X_test)
+    report = calibration.evaluate_calibration(test_logits, ds.y_test, temperature)
+    logger.info("  holdout ECE  %.4f -> %.4f   (accuracy unchanged: %s)",
+                report["uncalibrated"]["ece"], report["calibrated"]["ece"],
+                report["accuracy_unchanged"])
+    logger.info("  mean confidence %.4f vs accuracy %.4f before scaling",
+                report["uncalibrated"]["mean_confidence"],
+                report["uncalibrated"]["accuracy"])
+
+    # Choose the cutoff on the training folds ...
+    oof_probabilities = calibration.softmax(oof_logits, temperature)
+    oof_confidence = oof_probabilities.max(axis=1)
+    oof_correct = oof_probabilities.argmax(axis=1) == np.asarray(ds.y_train)
+    operating_point = calibration.threshold_for_target_accuracy(
+        oof_confidence, oof_correct, config.ABSTAIN_TARGET_ACCURACY
+    )
+
+    # ... and find out what it does on documents nobody tuned against.
+    test_probabilities = calibration.softmax(test_logits, temperature)
+    test_confidence = test_probabilities.max(axis=1)
+    test_correct = test_probabilities.argmax(axis=1) == np.asarray(ds.y_test)
+
+    holdout: Dict[str, float] = {}
+    if operating_point["achievable"]:
+        threshold = operating_point["threshold"]
+        answered = test_confidence >= threshold
+        holdout = {
+            "threshold": threshold,
+            "coverage": float(answered.mean()),
+            "n_answered": int(answered.sum()),
+            "selective_accuracy": (
+                float(test_correct[answered].mean()) if answered.any() else 0.0
+            ),
+            "accuracy_if_answering_everything": float(test_correct.mean()),
+        }
+        logger.info(
+            "  abstain below %.3f: answers %.1f%% of the holdout at %.4f accuracy "
+            "(vs %.4f answering everything)",
+            threshold, 100 * holdout["coverage"], holdout["selective_accuracy"],
+            holdout["accuracy_if_answering_everything"],
+        )
+    else:
+        logger.info("  no usable abstention threshold: %s", operating_point["note"])
+
+    return {
+        "temperature": temperature,
+        "calibration": report,
+        "operating_point_chosen_on_training_folds": operating_point,
+        "operating_point_measured_on_holdout": holdout,
+        "risk_coverage_curve": calibration.risk_coverage_curve(
+            test_confidence, test_correct
+        ),
+        "reliability_bins": {
+            "uncalibrated": calibration.reliability_bins(
+                calibration.softmax(test_logits, 1.0).max(axis=1), test_correct
+            ),
+            "calibrated": calibration.reliability_bins(test_confidence, test_correct),
+        },
+    }
 
 
 def measure_leakage_effect() -> Dict:
@@ -138,7 +239,12 @@ def main() -> Dict:
         logger.info("    %-26s -> %-26s  %4d%s", c["true"], c["predicted"],
                     c["count"], "  (siblings)" if c["same_supercategory"] else "")
 
-    # ---- 3. Interpretability -------------------------------------------
+    # ---- 3. Confidence: calibration and abstention ----------------------
+    logger.info("-" * 74)
+    logger.info("Confidence - is a '99%%' worth believing, and when to refuse?")
+    confidence = calibrate_and_choose_abstention(pipeline, ds, best_c)
+
+    # ---- 4. Interpretability -------------------------------------------
     top_features = explain.top_features_per_class(pipeline, ds.target_names)
     logger.info("-" * 74)
     logger.info("Sanity check - learned defining words:")
@@ -146,12 +252,12 @@ def main() -> Dict:
         words = ", ".join(f["token"] for f in top_features[topic][:6])
         logger.info("  %-20s %s", topic, words)
 
-    # ---- 4. Leakage experiment -----------------------------------------
+    # ---- 5. Leakage experiment -----------------------------------------
     logger.info("-" * 74)
     logger.info("Leakage experiment - what the post metadata would buy us:")
     leakage = measure_leakage_effect()
 
-    # ---- 5. Persist ----------------------------------------------------
+    # ---- 6. Persist ----------------------------------------------------
     import joblib
 
     config.MODELS_DIR.mkdir(parents=True, exist_ok=True)
@@ -161,6 +267,13 @@ def main() -> Dict:
         "pipeline": pipeline,
         "target_names": ds.target_names,
         "best_C": best_c,
+        # Both travel with the model so the demo cannot drift from the numbers
+        # in reports/: one scalar to calibrate the confidence, one cutoff below
+        # which the honest answer is "not sure".
+        "temperature": confidence["temperature"],
+        "abstain_threshold": confidence[
+            "operating_point_chosen_on_training_folds"
+        ].get("threshold"),
         "trained_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "sklearn_version": sklearn.__version__,
         "python_version": platform.python_version(),
@@ -187,19 +300,29 @@ def main() -> Dict:
             "per_class": metrics["per_class"],
         },
         "top_confusions": confusions,
+        "confidence": {
+            "temperature": confidence["temperature"],
+            "ece_before": confidence["calibration"]["uncalibrated"]["ece"],
+            "ece_after": confidence["calibration"]["calibrated"]["ece"],
+            "abstention": confidence["operating_point_measured_on_holdout"],
+        },
         "environment": {"sklearn": sklearn.__version__, "python": platform.python_version()},
     }
     config.METRICS_FILE.write_text(json.dumps(report, indent=2), encoding="utf-8")
     config.LEAKAGE_REPORT_FILE.write_text(json.dumps(leakage, indent=2), encoding="utf-8")
     config.TOP_FEATURES_FILE.write_text(json.dumps(top_features, indent=2), encoding="utf-8")
+    config.CALIBRATION_REPORT_FILE.write_text(
+        json.dumps(confidence, indent=2), encoding="utf-8"
+    )
     logger.info("Saved reports -> %s", config.REPORTS_DIR.name)
 
-    # ---- 6. Figures ----------------------------------------------------
+    # ---- 7. Figures ----------------------------------------------------
     try:
         from .plots import make_all_figures
 
         make_all_figures(
-            ds.y_test, y_pred, ds.target_names, metrics["per_class"], top_features
+            ds.y_test, y_pred, ds.target_names, metrics["per_class"], top_features,
+            confidence=confidence,
         )
         logger.info("Saved figures -> %s", config.FIGURES_DIR)
     except Exception as exc:            # plotting must never break training
