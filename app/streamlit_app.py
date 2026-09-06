@@ -2,15 +2,13 @@
 
 Run with:  streamlit run app/streamlit_app.py
 
-Paste any piece of text; the app shows the predicted topic, the probability
-spread across all 20 topics, and - the interesting part - which words in *your*
-text drove the decision. That last panel is only possible because the model is
-linear (see src/news_classifier/explain.py).
+Paste any text; the app shows the predicted topic, the spread across all 20,
+and which words in that text drove the decision - the last panel only being
+possible because the model is linear.
 
-The confidence shown is the calibrated one (see src/news_classifier/
-calibration.py), and below the abstention threshold the app says it is not sure
-instead of presenting a guess as an answer. A demo that always produces a
-confident-looking topic for any input misrepresents the model.
+The confidence is the calibrated one, and below the abstention threshold the
+app says it is not sure. A demo that produces a confident-looking topic for any
+input misrepresents the model.
 """
 
 from __future__ import annotations

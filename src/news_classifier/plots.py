@@ -100,14 +100,10 @@ def plot_top_features(top_features: Dict[str, List[Dict[str, float]]],
 def plot_confidence(confidence: Dict) -> None:
     """Reliability before and after scaling, and what abstaining buys.
 
-    Left: the reliability diagram. A perfectly calibrated model sits on the
-    diagonal; points *above* it are under-confidence, which is where a
-    regularised linear model usually lives and is the opposite of the
-    over-confidence neural networks are famous for.
-
-    Right: selective accuracy against coverage. This is the chart that turns a
-    calibrated probability into a product decision - answer less, be right more,
-    and here is the exchange rate.
+    Left, the reliability diagram: on the diagonal is calibrated, above it is
+    under-confidence, where regularised linear models usually live. Right,
+    selective accuracy against coverage - answer less, be right more, and here
+    is the exchange rate.
     """
     fig, (ax_left, ax_right) = plt.subplots(1, 2, figsize=(11, 4.2))
 

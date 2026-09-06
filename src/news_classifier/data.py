@@ -1,9 +1,8 @@
 """Loading the 20 Newsgroups corpus.
 
-The dataset is fetched through scikit-learn, which caches it as a single
-compressed pickle under data/raw. The cache is committed-around (gitignored),
-so the first run downloads ~15 MB and every run afterwards is instant and
-offline - CI and tests never touch the network.
+scikit-learn caches it as one compressed pickle under data/raw (gitignored), so
+the first run downloads ~15 MB and every run afterwards is offline. CI and tests
+never touch the network.
 """
 
 from __future__ import annotations
@@ -41,16 +40,12 @@ class Dataset:
 def load_dataset(remove: Tuple[str, ...] = config.REMOVE_PARTS) -> Dataset:
     """Return the official by-date train/test split.
 
-    Args:
-        remove: which leaky parts of each post to strip. Defaults to the full
-            set (headers, footers, quotes); train.py calls it with `()` to
-            measure how much those parts inflate the score.
+    The official split rather than a shuffle because the test set is a later
+    time slice, which is the situation a deployed classifier faces.
+    Reshuffling would leak future posts into training and flatter the metrics.
 
-    Why the official split rather than a fresh shuffle: the 20 Newsgroups test
-    set is a *later* time slice than the training set, which is exactly the
-    situation a deployed classifier faces. Reshuffling would leak future posts
-    into training and flatter the metrics - the same mistake, one level down,
-    that a random split makes on time-ordered tabular data.
+    `remove` defaults to the full set; train.py passes `()` to measure how much
+    the headers, footers and quotes inflate the score.
     """
     logger.info("Loading 20 Newsgroups (remove=%s) ...", remove or "nothing")
 

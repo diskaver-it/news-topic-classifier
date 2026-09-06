@@ -1,28 +1,19 @@
 """Confidence: is a "99%" worth believing, and when should the model refuse?
 
-The demo shows a probability next to every prediction, and until now that number
-had never been checked. `predict_proba` returns whatever the softmax over the
-decision function happens to say - a quantity that orders documents correctly
-while being systematically over- or under-confident about all of them. On a
-20-class problem trained with L2 regularisation it is usually *under*-confident,
-which is the less famous direction and just as wrong.
+The demo shows a probability next to every prediction and that number had never
+been checked. A softmax over the decision function orders documents correctly
+while being systematically over- or under-confident about all of them - on 20
+classes with L2 regularisation, usually under.
 
-Two things follow from measuring it, and they are the same feature seen twice:
+Two things follow, and they are the same feature twice. Calibration: among the
+posts called 80% confident, about 80% should be right, and temperature scaling
+fixes that with one parameter, no retraining and no change to the ranking.
+Abstention: once the confidence means something it can be a decision - answer
+when sure, hand the rest to a human.
 
-  * **calibration.** Among the posts the model calls 80% confident, roughly 80%
-    should be right. That is checkable, and temperature scaling fixes it with a
-    single parameter - no retraining, no change to the ranking, so accuracy and
-    every explanation stay exactly as they were.
-
-  * **abstention.** Once the confidence means something, it can be used as a
-    decision: answer when confident, hand the rest to a human. A topic router
-    that is 70% accurate on everything is much less useful than one that is 90%
-    accurate on the three quarters of posts it is sure about - and says so about
-    the rest. Without calibration that threshold is unpickable.
-
-The order matters. Selecting on an uncalibrated confidence still works, because
-selection only needs the ranking; but the *threshold* someone picks - "answer
-above 0.9" - means nothing until the number does.
+The order matters. Selection only needs the ranking, so it works on an
+uncalibrated score; but a threshold someone picks - "answer above 0.9" - means
+nothing until the number does.
 """
 
 from __future__ import annotations
@@ -43,10 +34,9 @@ logger = logging.getLogger(__name__)
 def softmax(logits: np.ndarray, temperature: float = 1.0) -> np.ndarray:
     """Row-wise softmax of `logits / temperature`.
 
-    The max is subtracted before exponentiating. That is not a micro
-    optimisation: `exp(800)` overflows to infinity and the row comes back as
-    NaN, and subtracting a per-row constant leaves the result unchanged because
-    the constant cancels between numerator and denominator.
+    The per-row max comes off before exponentiating - not an optimisation:
+    exp(800) overflows and the row returns NaN. The constant cancels between
+    numerator and denominator, so the result is unchanged.
     """
     if temperature <= 0:
         raise ValueError(f"temperature must be positive, got {temperature}")
@@ -73,18 +63,13 @@ def fit_temperature(
 ) -> float:
     """Find the single scalar that best calibrates the model (Guo et al., 2017).
 
-    Temperature scaling divides every logit by one number, chosen to minimise
-    the negative log-likelihood. Because it is a monotone transformation applied
-    identically to all classes, the arg-max never moves: **accuracy, macro-F1,
-    the confusion matrix and every word-level explanation are unchanged**. Only
-    the confidence attached to the answer changes. That is what makes it safe to
-    bolt on to a model that has already been evaluated.
+    One number divides every logit, chosen to minimise the NLL. Monotone and
+    applied identically to all classes, so the arg-max never moves: accuracy,
+    macro-F1, the confusion matrix and every explanation are unchanged. That is
+    what makes it safe to bolt onto an already-evaluated model.
 
-    T > 1 softens over-confident probabilities; T < 1 sharpens under-confident
-    ones. Regularised linear models on sparse text usually land below 1.
-
-    The objective is smooth and one-dimensional, so a bounded scalar search is
-    both sufficient and the honest amount of machinery for the job.
+    T > 1 softens over-confidence, T < 1 sharpens under-confidence; regularised
+    linear models on sparse text usually land below 1.
     """
     from scipy.optimize import minimize_scalar
 
@@ -151,15 +136,9 @@ def expected_calibration_error(
 
         ECE = sum over bins of  (n_bin / n) * |accuracy(bin) - confidence(bin)|
 
-    ECE is the number to quote and MCE is the number to worry about. A model can
-    have a respectable ECE while being wildly wrong in one sparsely populated
-    bin, and if that bin is the high-confidence one - the only one anybody acts
-    on - the average has hidden the thing that matters.
-
-    Reported alongside: the mean confidence and the actual accuracy. If mean
-    confidence is below accuracy the model is *under*-confident, which is the
-    usual direction for a regularised linear model and the opposite of the
-    over-confidence neural networks are known for.
+    ECE is the number to quote, MCE the one to worry about: a respectable ECE
+    can hide one sparse bin that is wildly wrong, and if that is the
+    high-confidence bin it is the only one anybody acts on.
     """
     confidences = np.asarray(confidences, dtype=float)
     correct = np.asarray(correct, dtype=bool)
@@ -192,14 +171,12 @@ def risk_coverage_curve(
 ) -> List[Dict[str, float]]:
     """Accuracy against coverage as the abstention threshold moves.
 
-    Coverage is the share of documents the model is willing to answer at all;
-    selective accuracy is how often it is right *among those*. The trade-off is
-    the whole product decision: a router that answers everything at 0.70 and one
-    that answers 60% of the traffic at 0.90 are different systems, and which is
-    better depends on what the other 40% costs to review.
+    The whole product decision: a router answering everything at 0.70 and one
+    answering 60% of traffic at 0.90 are different systems, and which is better
+    depends on what the other 40% costs to review.
 
-    A threshold with no documents above it is reported as zero coverage and an
-    undefined accuracy of 0.0 rather than a NaN, so the curve stays plottable.
+    An empty threshold reports zero coverage and accuracy 0.0 rather than NaN,
+    so the curve stays plottable.
     """
     confidences = np.asarray(confidences, dtype=float)
     correct = np.asarray(correct, dtype=bool)
@@ -233,15 +210,10 @@ def threshold_for_target_accuracy(
 ) -> Dict[str, float]:
     """The most permissive threshold that still reaches the target accuracy.
 
-    "Most permissive" is the point: any threshold high enough gets there by
-    answering three documents, so the useful question is the *lowest* cutoff
-    that clears the bar, because that is the one that answers the most traffic.
-    `min_coverage` refuses the degenerate answers.
-
-    Must be chosen on data the model has not been evaluated on if the resulting
-    coverage is to be believed - the same rule as any other tuned threshold.
-    Returns `achievable: False` rather than a made-up cutoff when the target is
-    out of reach, because silently returning 0.99 would look like a result.
+    "Most permissive" is the point - any high enough cutoff gets there by
+    answering three documents, so the useful one is the lowest that clears the
+    bar. `min_coverage` refuses the degenerate answers, and an unreachable
+    target returns `achievable: False` rather than a 0.99 that looks like one.
     """
     curve = risk_coverage_curve(confidences, correct)
     feasible = [
@@ -279,13 +251,9 @@ def calibrated_probabilities(
 ) -> np.ndarray:
     """`predict_proba` with the fitted temperature applied.
 
-    Goes through `decision_function` rather than `predict_proba` because the
-    temperature belongs on the logits; re-deriving them from probabilities would
-    be the same arithmetic done backwards and less precisely.
-
-    Multiclass only. A binary classifier's `decision_function` returns a single
-    column, and a softmax over one column is identically 1.0 - so this refuses
-    rather than returning a confidently meaningless answer.
+    Through `decision_function`, because the temperature belongs on the logits;
+    recovering them from probabilities is the same arithmetic backwards and
+    less precisely. Multiclass only - a softmax over one column is always 1.0.
     """
     logits = np.asarray(pipeline.decision_function(list(texts)), dtype=float)
     if logits.ndim != 2 or logits.shape[1] < 2:

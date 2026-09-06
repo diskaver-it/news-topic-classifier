@@ -2,15 +2,10 @@
 
 Run with:  python -m news_classifier.train
 
-Four stages, and the middle two are what lift this above a fit-predict script:
-
-  1. tune the regularisation strength by cross-validation, then fit and score
-     on the official holdout;
-  2. calibrate the confidence and derive the point at which the model should
-     refuse to answer rather than guess among 20 topics;
-  3. the leakage experiment - retrain with the post headers/footers/quotes left
-     in and measure how many points of "accuracy" they hand over for free;
-  4. persist the model, the per-topic defining words, and the report figures.
+Tune C by cross-validation and score on the official holdout, then the two
+stages that lift this above a fit-predict script: calibrate the confidence and
+derive the point at which the model should refuse to answer, and measure how
+many points of "accuracy" the headers, footers and quotes hand over for free.
 """
 
 from __future__ import annotations
@@ -36,10 +31,8 @@ logger = logging.getLogger(__name__)
 def tune_regularisation(X_train, y_train) -> float:
     """Pick the logistic-regression C by 3-fold CV on macro-F1.
 
-    A small, explicit grid rather than a blind default: too much regularisation
-    (small C) underfits 20 fine-grained topics, too little overfits the sparse
-    tail of the vocabulary. Optimising macro-F1 rather than accuracy keeps the
-    choice honest about the harder, smaller-signal classes.
+    Macro-F1 rather than accuracy so the choice stays honest about the harder,
+    smaller classes instead of being decided by the big easy ones.
     """
     logger.info("Tuning C by cross-validation ...")
 
@@ -65,20 +58,12 @@ def tune_regularisation(X_train, y_train) -> float:
 def calibrate_and_choose_abstention(pipeline, ds, best_c: float) -> Dict:
     """Make the confidence mean something, then use it to decide when to refuse.
 
-    Two rules govern this, and both are the reason it is a separate stage rather
-    than three lines appended to the evaluation:
-
-    * **the temperature is fitted out of fold.** In-sample logits are the
-      model's opinion of documents whose answers it has already seen, and a
-      temperature fitted on those calibrates the model to its own training set.
-      `cross_val_predict` gives honest logits for every training document at the
-      cost of a few extra fits.
-
-    * **the abstention threshold is chosen on the training folds, and only
-      *measured* on the holdout.** Picking the cutoff that hits 90% accuracy on
-      the test set and then reporting that it hits 90% accuracy on the test set
-      is circular; the number worth quoting is the coverage the threshold turns
-      out to give on data it was not chosen on.
+    Two rules, and they are why this is a stage rather than three lines
+    appended to the evaluation. The temperature is fitted out of fold -
+    in-sample logits are the model's opinion of answers it has already seen.
+    And the abstention threshold is chosen on the training folds and only
+    measured on the holdout: picking the cutoff that hits 90% on the test set
+    and then reporting 90% on the test set is circular.
     """
     logger.info("Fitting temperature on out-of-fold logits (%d folds) ...",
                 config.CALIBRATION_CV_FOLDS)
@@ -162,17 +147,12 @@ def calibrate_and_choose_abstention(pipeline, ds, best_c: float) -> Dict:
 
 
 def measure_leakage_effect() -> Dict:
-    """Quantify what the post headers/footers/quotes are worth - and why we cut them.
+    """Quantify what the headers, footers and quotes are worth - and why we cut them.
 
-    This is the 20 Newsgroups analogue of a target leak. The raw posts carry
-    their newsgroup in the headers, recurring signatures in the footers, and
-    quoted parent text that is usually on-topic. A model trained on all that can
-    hit very high accuracy while doing almost no language understanding - it
-    reads the metadata. Strip those parts and the score drops to what the model
-    can actually earn from the message body.
-
-    We train the same pipeline both ways and report both numbers. The honest one
-    is the lower one.
+    The 20 Newsgroups analogue of a target leak: the posts carry their
+    newsgroup in the headers and on-topic quoted text in the body, so a model
+    can score well while reading metadata rather than language. Train it both
+    ways, report both, keep the lower one.
     """
     results: Dict[str, Dict] = {}
 

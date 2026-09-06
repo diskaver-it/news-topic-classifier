@@ -22,11 +22,9 @@ def evaluate_predictions(
 ) -> Dict:
     """Headline metrics plus a full per-class breakdown.
 
-    Macro-F1 is reported alongside accuracy on purpose. Accuracy weights every
-    document equally, so a model can look good by nailing the big, easy classes
-    and quietly failing a small one. Macro-F1 averages the per-class F1 with
-    equal weight *per class*, so a topic the model cannot handle drags the score
-    down no matter how rare it is - which is what you want to know.
+    Macro-F1 next to accuracy on purpose: accuracy weights documents equally,
+    so nailing the big classes hides a failed small one. Macro-F1 weights
+    per class, so a topic the model cannot handle drags the score down.
     """
     accuracy = accuracy_score(y_true, y_pred)
     macro_f1 = f1_score(y_true, y_pred, average="macro")
@@ -52,11 +50,9 @@ def top_confusions(
 ) -> List[Dict]:
     """The k most frequent (true -> predicted) mistakes.
 
-    A raw 20x20 confusion matrix is hard to read; the pairs the model actually
-    confuses tell the story faster. The `same_supercategory` flag is the point:
-    most errors are between sibling topics (two comp.* groups, or atheism vs
-    christianity), which is the model being *reasonably* wrong rather than
-    cluelessly wrong.
+    A 20x20 matrix is hard to read; the pairs actually confused tell the story
+    faster. `same_supercategory` is the point - most errors are between sibling
+    topics, which is being reasonably wrong rather than cluelessly wrong.
     """
     # Pin the matrix to the full label set. Without `labels`, confusion_matrix
     # sizes itself to whichever classes happen to appear in this batch, and the
