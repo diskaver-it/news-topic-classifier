@@ -21,6 +21,28 @@ wrapped in a Streamlit demo.
    └────────────────────┘   └──────────────────────────────────┘
 ```
 
+[Русская версия](README.ru.md)
+
+---
+
+## The decision behind it
+
+The shape of this problem is a routing queue: text arrives, something has to send it
+to the right place, and a wrong route costs whatever it costs to notice and redo it.
+Framed that way the interesting question is not "how accurate" but **where the machine
+should stop deciding** — a router that is 70% right on everything is usually worse than
+one that is 85% right on two thirds and hands the rest to a person.
+
+That is what this repository ends with: **67% coverage at 0.851 accuracy**, against
+0.695 if it answers everything. The calibration work in §4 is what makes the cutoff
+pickable at all, and the per-word explanation in §1 is what makes a wrong route
+reviewable in seconds instead of being a verdict from nowhere.
+
+20 Newsgroups is a public research corpus with no client behind it, so the routing
+frame is one this data supports rather than one anybody asked for. What it cannot tell
+you is the exchange rate: whether 33% of traffic going to a human is cheap or ruinous
+depends on review cost, which no public dataset carries.
+
 ---
 
 ## Results
