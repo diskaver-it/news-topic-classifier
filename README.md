@@ -21,6 +21,8 @@ wrapped in a Streamlit demo.
    └────────────────────┘   └──────────────────────────────────┘
 ```
 
+[![CI](https://github.com/diskaver-it/news-topic-classifier/actions/workflows/ci.yml/badge.svg)](https://github.com/diskaver-it/news-topic-classifier/actions/workflows/ci.yml)
+
 [Русская версия](README.ru.md)
 
 ---

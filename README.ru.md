@@ -20,6 +20,8 @@
    └────────────────────┘   └──────────────────────────────────┘
 ```
 
+[![CI](https://github.com/diskaver-it/news-topic-classifier/actions/workflows/ci.yml/badge.svg)](https://github.com/diskaver-it/news-topic-classifier/actions/workflows/ci.yml)
+
 [English version](README.md)
 
 ---
